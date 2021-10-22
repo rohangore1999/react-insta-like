@@ -49,7 +49,7 @@ function App() {
   const [link, setlink] = useState("")
 
 
-  const visitlink = (link) => {
+  const visitlink = (link,insta_handle) => {
     if (datasLength === 0) {
       toggleDrawer()
     }
@@ -69,8 +69,8 @@ function App() {
         upiid: initTodo[0]['upiid'],
         mobile: initTodo[0]['mobile'],
         visit: true,
-        link: link
-
+        link: link,
+        insta_handle:insta_handle
       }
 
       // append MyTodo to todos list
@@ -108,7 +108,8 @@ function App() {
       upiid: upiid,
       mobile: mobile,
       visit: false,
-      link: ''
+      link: '',
+      insta_handle:''
 
     }
 

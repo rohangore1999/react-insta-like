@@ -20,7 +20,7 @@ export default function ImageLists(props) {
     return (
         <div className="container row row-cols-1 row-cols-md-2 g-4 my-5">
             {data.map((item) => (
-                <div className="col">
+                <div className="col" key={item.id}>
                     <Card className="card">
                         <CardHeader
                             avatar={
@@ -42,7 +42,7 @@ export default function ImageLists(props) {
 
                             {/* <button className="btn btn-danger btn-sm mt-3" onClick={visitlink}>Visit Link</button> */}
 
-                            <Button className="mt-3" variant="contained" style={{ backgroundColor: '#bb2d3b', borderColor: '#dc3545', color: 'white' }} onClick={e => props.visitlink(item.link)}>Visit Link</Button>
+                            <Button className="mt-3" variant="contained" style={{ backgroundColor: '#bb2d3b', borderColor: '#dc3545', color: 'white' }} onClick={e => props.visitlink(item.link,item.insta_handle)}>Visit Link</Button>
                             {/* <DrawerButton /> */}
 
                         </CardContent>
