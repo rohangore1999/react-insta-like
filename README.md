@@ -4,4 +4,4 @@ Moneygram is committed to helping increase the reach of small businesses and asp
 
 ## Build using REACT.JS
 
-[MoneyGram](http://moneygram.investenergy.in/).
+[MoneyGram](http://moneygram.investenergy.in/)
