@@ -14,10 +14,23 @@ import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
 import EditIcon from '@material-ui/icons/Edit';
 import EmailIcon from '@material-ui/icons/Email';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import InfoIcon from '@material-ui/icons/Info'
+import IconButton from '@material-ui/core/IconButton';
+
+import { Tooltip } from '@material-ui/core';
+// progress bar on top
+import LoadingBar from 'react-top-loading-bar'
 
 
 // to send data to Flask python
 import axios from 'axios'
+
+// router
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
 function App() {
   // Initially it will check if that localstorage is empty or not
@@ -49,7 +62,7 @@ function App() {
   const [link, setlink] = useState("")
 
 
-  const visitlink = (link,insta_handle) => {
+  const visitlink = (link, insta_handle) => {
     if (datasLength === 0) {
       toggleDrawer()
     }
@@ -70,7 +83,7 @@ function App() {
         mobile: initTodo[0]['mobile'],
         visit: true,
         link: link,
-        insta_handle:insta_handle
+        insta_handle: insta_handle
       }
 
       // append MyTodo to todos list
@@ -109,7 +122,7 @@ function App() {
       mobile: mobile,
       visit: false,
       link: '',
-      insta_handle:''
+      insta_handle: ''
 
     }
 
@@ -177,73 +190,110 @@ function App() {
     setOpen(false);
   };
 
+  // setting TOP progress bar
 
+  const [value, setvalue] = useState(10)
+
+  // TOOLTIP function
+  const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <>
-      <Navbar />
-      <ImageLists datasLength={datasLength} toggleDrawer={toggleDrawer} visitlink={visitlink} />
+      <Router>
+        <Navbar />
+        <LoadingBar
+          color='#f11946'
+          progress={value}
+          height={4}
+        />
 
-      {/* floating button */}
+        <Switch>
+          {/* <Route exact path="/about">
+          <About />
+        </Route> */}
 
-      {/* <Fab style={{ position: 'fixed', width: '55px', height: '55px', bottom: '40px', right: '40px', backgroundColor: '#25D366', color: 'white' }} aria-label="add" onClick={toggleWhatsapp}>
+          <Route exact path="/">
+
+
+
+            <ImageLists datasLength={datasLength} setvalue={setvalue} toggleDrawer={toggleDrawer} visitlink={visitlink} />
+
+            {/* floating button */}
+
+            {/* <Fab style={{ position: 'fixed', width: '55px', height: '55px', bottom: '40px', right: '40px', backgroundColor: '#25D366', color: 'white' }} aria-label="add" onClick={toggleWhatsapp}>
         <WhatsAppIcon fontSize='medium' />
       </Fab> */}
 
-      <SpeedDial
-        ariaLabel="SpeedDial openIcon example"
-        style={style}
-        hidden={false}
-        icon={<QuestionAnswerIcon openicon={<EditIcon />} />}
-        onClose={handleClose}
-        onOpen={handleOpen}
-        open={open}
-      >
-        {actions.map((action) => (
-          <SpeedDialAction
-            key={action.name}
-            icon={action.icon}
-            tooltipTitle={action.name}
-            onClick={handleClose}
-            href={action.link}
-          />
-        ))}
-      </SpeedDial>
+            <SpeedDial
+              ariaLabel="SpeedDial openIcon example"
+              style={style}
+              hidden={false}
+              icon={<QuestionAnswerIcon openicon={<EditIcon />} />}
+              onClose={handleClose}
+              onOpen={handleOpen}
+              open={open}
+            >
+              {actions.map((action) => (
+                <SpeedDialAction
+                  key={action.name}
+                  icon={action.icon}
+                  tooltipTitle={action.name}
+                  onClick={handleClose}
+                  href={action.link}
+                />
+              ))}
+            </SpeedDial>
 
-      {/* Drawer */}
-      <Drawer anchor={'bottom'}
-        open={state}
-        onClose={() => { setState(false) }}>
-        <div className="container">
-          <h2 className="my-3">Fill Details</h2> <hr className="mb-4" />
-          <form onSubmit={submit}>
-            <div className="mb-3 container">
-              {/* <label htmlFor="name" className="form-label">Name</label>
+            {/* Drawer */}
+            <Drawer anchor={'bottom'}
+              open={state}
+              onClose={() => { setState(false) }}>
+              <div className="container">
+                <h2 className="my-3">Fill Details</h2> <hr className="mb-4" />
+                <form onSubmit={submit}>
+                  <div className="mb-3 container">
+                    {/* <label htmlFor="name" className="form-label">Name</label>
               <input type="name" className="form-control mb-3" id="name" aria-describedby="name" value={name} onChange={(e) => { setname(e.target.value) }} /> */}
 
-              {/* <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
+                    {/* <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
               <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" value={email} onChange={(e) => setemail(e.target.value)} /> */}
 
 
-              <TextField id="standard-basic" label="Name" variant="standard" value={name} onChange={(e) => { setname(e.target.value) }} style={{ width: '100%', marginBottom: '2%' }} />
+                    <TextField id="standard-basic" label="Name" variant="standard" value={name} onChange={(e) => { setname(e.target.value) }} style={{ width: '100%', marginBottom: '2%' }} />
 
-              <TextField id="standard-basic" label="Email" variant="standard" value={email} onChange={(e) => setemail(e.target.value)} style={{ width: '100%',marginBottom: '2%' }} />
+                    <TextField id="standard-basic" label="Email" variant="standard" value={email} onChange={(e) => setemail(e.target.value)} style={{ width: '100%', marginBottom: '2%' }} />
 
-              <TextField id="standard-basic" label="Insta Id" variant="standard" value={instaid} onChange={(e) => { setinstaid(e.target.value) }} style={{ width: '100%', marginBottom: '2%' }} />
+                    <TextField id="standard-basic" label="Insta Id" variant="standard" value={instaid} onChange={(e) => { setinstaid(e.target.value) }} style={{ width: '100%', marginBottom: '2%' }} />
 
-              <TextField id="standard-basic" label="UPI ID" variant="standard" value={upiid} onChange={(e) => setupiid(e.target.value)} style={{ width: '100%',marginBottom: '1%' }} />
 
-              <TextField id="standard-basic" label="Mobile" type="number" variant="standard" value={mobile} onChange={(e) => { setmobile(e.target.value) }} style={{ width: '100%', marginBottom: '1%' }} />
 
-            </div>
+                    <div className="d-inline d-flex justify-content-between">
+                      <TextField id="standard-basic" label="UPI ID" variant="standard" value={upiid} onChange={(e) => setupiid(e.target.value)} style={{ width: "100%", marginBottom: '1%' }} />
 
-            {/* <button type="submit" className={`btn btn-primary my-3 ${name === '' ? 'disabled' : ''} ${email === '' ? 'disabled' : ''}`}>Submit</button> */}
 
-            <Button type="submit" variant="contained" endIcon={<SendIcon />} color="primary" size="medium" style={{ marginTop: '1%', marginBottom: '3%' }} className={`btn btn-primary my-3 ${name === '' ? 'disabled' : ''} ${email === '' ? 'disabled' : ''} ${instaid === '' ? 'disabled' : ''} ${upiid === '' ? 'disabled' : ''}`}>Send</Button>
+                      <Tooltip title="We will not request any money via UPI" open={showTooltip} placement="top" onOpen={() => setShowTooltip(true)} onClose={() => setShowTooltip(false)}
+                        arrow>
+                        <IconButton onClick={() => setShowTooltip(!showTooltip)}>
+                          <InfoIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
 
-          </form>
-        </div>
-      </Drawer>
+                    <TextField id="standard-basic" label="Mobile" type="number" variant="standard" value={mobile} onChange={(e) => { setmobile(e.target.value) }} style={{ width: '100%', marginBottom: '1%' }} />
+
+                  </div>
+
+                  {/* <button type="submit" className={`btn btn-primary my-3 ${name === '' ? 'disabled' : ''} ${email === '' ? 'disabled' : ''}`}>Submit</button> */}
+
+                  <Button type="submit" variant="contained" endIcon={<SendIcon />} color="primary" size="medium" style={{ marginTop: '1%', marginBottom: '3%' }} className={`btn btn-primary my-3 ${name === '' ? 'disabled' : ''} ${email === '' ? 'disabled' : ''} ${instaid === '' ? 'disabled' : ''} ${upiid === '' ? 'disabled' : ''}`}>Send</Button>
+
+                </form>
+              </div>
+            </Drawer>
+
+          </Route>
+        </Switch>
+      </Router>
     </>
   );
 }
